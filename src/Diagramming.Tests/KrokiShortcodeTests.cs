@@ -1,21 +1,20 @@
 using System.Xml.Linq;
-using NUnit.Framework;
+using Diagramming.Tests.Helpers;
 using Shouldly;
 using Statiq.Extensions.Diagramming;
 using Statiq.Testing;
-using Theory = Xunit.TheoryAttribute;
+using XTheory = Xunit.TheoryAttribute;
 
 namespace Diagramming.Tests;
 
 public class KrokiShortcodeTests
 {
-    [Fact]
-    [Ignore("This test runs against the local Kroki container, do DO NOT run it automatically!!")]
+    [OnlyOnLocalKroki]
     public async Task Test1()
     {
         // Given
         var context = new TestExecutionContext();
-        context.Settings.Add(SettingKeys.Kroki.ServiceUrl, "http://localhost:8000/");
+        context.Settings.Add(SettingKeys.Kroki.ServiceUrl, LocalServices.Kroki);
         var document = new TestDocument();
         var shortcode = new KrokiShortcode();
         const string shortcodeContent = """
@@ -40,7 +39,7 @@ public class KrokiShortcodeTests
         inner!.Name.LocalName.ShouldBe("svg");
     }
 
-    [Theory]
+    [XTheory]
     [InlineData("svg")]
     [InlineData("png")]
     [InlineData("jpg")]
@@ -73,14 +72,14 @@ public class KrokiShortcodeTests
         var content = await result.Single().ContentProvider.GetTextReader().ReadToEndAsync();
         var svg = XDocument.Parse(content).Root!.Nodes().Single() as XElement;
         svg!.Attributes().Single(x => x.Name.LocalName == "width").Value.ShouldBe("20px");
-        svg!.Attributes().Single(x => x.Name.LocalName == "height").Value.ShouldBe("21px");
+        svg.Attributes().Single(x => x.Name.LocalName == "height").Value.ShouldBe("21px");
         if (outputFormat == "svg")
         {
-            svg!.Attributes().FirstOrDefault(x => x.Name.LocalName == "alt").ShouldBeNull();
+            svg.Attributes().FirstOrDefault(x => x.Name.LocalName == "alt").ShouldBeNull();
         }
         else
         {
-            svg!.Attributes().Single(x => x.Name.LocalName == "alt").Value.ShouldBe("some alt text");
+            svg.Attributes().Single(x => x.Name.LocalName == "alt").Value.ShouldBe("some alt text");
         }
     }
 }

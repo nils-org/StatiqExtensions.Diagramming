@@ -1,7 +1,7 @@
 using Statiq.Extensions.Diagramming;
 using Statiq.Testing;
 
-namespace Diagramming.Tests;
+namespace Diagramming.Tests.Helpers;
 
 public static class TestExecutionContextExtensions
 {

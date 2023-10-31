@@ -1,6 +1,6 @@
 using Statiq.Extensions.Diagramming.Web;
 
-namespace Diagramming.Tests;
+namespace Diagramming.Tests.Helpers;
 
 public class MockWebAdapter : IWebAdapter
 {
